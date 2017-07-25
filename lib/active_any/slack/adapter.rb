@@ -8,7 +8,7 @@ module ActiveAny
       def initialize(klass)
         super(klass)
         @api_name = klass.api_name
-        @param_keys = klass.param_keys
+        @param_keys = klass.param_keys.map(&:to_sym)
         @data_key = klass.data_key
       end
 

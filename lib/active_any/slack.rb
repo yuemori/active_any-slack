@@ -42,6 +42,7 @@ module ActiveAny
     end
 
     class User < ActiveAny::Slack::Base
+      self.primary_key = :id
       self.api_name = :users_list
       self.json_file = 'slack/slack-api-ref/methods/users/users.list.json'
       self.data_key = 'members'
@@ -53,6 +54,7 @@ module ActiveAny
     end
 
     class Channel < ActiveAny::Slack::Base
+      self.primary_key = :id
       self.api_name = :channels_list
       self.json_file = 'slack/slack-api-ref/methods/channels/channels.list.json'
       self.data_key = 'channels'
@@ -61,6 +63,19 @@ module ActiveAny
                  :is_general, :name_normalized, :is_shared, :is_org_shared,
                  :is_member, :is_private, :is_mpim, :members, :topic, :purpose,
                  :previous_names, :num_members
+
+      has_many :channel_histories, foreign_key: :channel, class_name: 'ActiveAny::Slack::ChannelHistory'
+    end
+
+    class ChannelHistory < ActiveAny::Slack::Base
+      self.primary_key = :channel
+      self.api_name = :channels_history
+      self.json_file = 'slack/slack-api-ref/methods/channels/channels.history.json'
+      self.data_key = 'messages'
+
+      attributes :user, :members, :type, :subtype, :text, :ts, :file, :upload,
+                 :display_as_bot, :username, :bot_id, :attachments, :edited, :purpose,
+                 :inviter, :reactions, :topic, :icons
     end
   end
 end
