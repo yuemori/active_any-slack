@@ -13,6 +13,9 @@ Style/Documentation:
 Style/PredicateName:
   Enabled: false
 
+Style/LineLength:
+  Max: 150
+
 Style/ClassAndModuleChildren:
   Exclude:
     - test/**/*.rb
