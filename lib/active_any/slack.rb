@@ -23,14 +23,32 @@ module ActiveAny
       @config ||= Configuration.new
     end
 
-    class User < ActiveAny::Base
+    class Base < ActiveAny::Base
       self.abstract_class = true
 
       class << self
+        attr_accessor :api_name
+        attr_reader :param_keys
+
+        def json_file=(file)
+          json = JSON.parse(File.read(File.expand_path(file, File.dirname(__FILE__))))
+          @param_keys = json['args'].keys
+        end
+
         def adapter
-          Slack::Adapter.new(self, :users_list)
+          Slack::Adapter.new(self, api_name, param_keys)
         end
       end
+    end
+
+    class User < ActiveAny::Slack::Base
+      self.api_name = :users_list
+      self.json_file = 'slack/slack-api-ref/methods/users/users.list.json'
+
+      attributes :id, :team_id, :name, :deleted, :color, :real_name,
+                 :tz, :tz_label, :tz_offset, :profile, :is_admin, :is_owner,
+                 :updated, :has_2fa, :is_bot, :is_primary_owner, :is_restricted,
+                 :is_ultra_restricted
     end
   end
 end
