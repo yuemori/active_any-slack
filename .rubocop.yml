@@ -1,0 +1,18 @@
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - bin/console
+    - active_any-slack.gemspec
+    - Guardfile
+    - vendor/bundle/**/*
+  DisplayCopNames: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/PredicateName:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - test/**/*.rb
