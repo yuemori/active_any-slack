@@ -3,12 +3,13 @@
 module ActiveAny
   module Slack
     class Adapter < ActiveAny::ObjectAdapter
-      attr_reader :api_name, :param_keys
+      attr_reader :api_name, :param_keys, :data_key
 
-      def initialize(klass, api_name, param_keys)
+      def initialize(klass)
         super(klass)
-        @api_name = api_name
-        @param_keys = param_keys
+        @api_name = klass.api_name
+        @param_keys = klass.param_keys
+        @data_key = klass.data_key
       end
 
       def query(where_clause: Relation::WhereClause.empty, order_clause: Relation::OrderClause.empty, limit_value: nil, group_values: [])
@@ -33,7 +34,7 @@ module ActiveAny
 
       def fetch_records(params)
         response = client.send(api_name, params)
-        response['members'].map { |member| klass.new(member.to_h) }
+        response[data_key].map { |member| klass.new(member.to_h) }
       end
 
       def client
